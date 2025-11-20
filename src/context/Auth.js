@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useReducer, useState } from "reac
 
 const Auth = createContext()
 
-const initialState = { isAuth: true, user: {} }
+const initialState = { isAuth: false, user: {} }
 
 const reducer = (state, { type, payload }) => {
     switch (type) {
