@@ -40,14 +40,12 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default function FrontendLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}>
-        <AppProvider>
-          {children}
-        </AppProvider>
-      </body>
-    </html>
+    <>
+      <Header />
+      {children}
+      <Footer />
+    </>
   );
 }

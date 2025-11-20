@@ -3,7 +3,7 @@ const Home = () => {
     return (
         <main className="grow">
             <div className="container mx-auto px-4 py-15">
-                <h1 className="text-5xl text-center">Home page</h1>
+                <h1 className="text-5xl text-center">About page</h1>
             </div>
         </main>
     )
