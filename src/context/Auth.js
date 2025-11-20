@@ -1,42 +1,41 @@
 "use client";
 
-import { createContext, useState, useEffect, useContext } from "react";
-import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useReducer, useState } from "react";
 
-const Auth = createContext();
+const Auth = createContext()
 
-export default function AuthProvider({ children }) {
+const initialState = { isAuth: true, user: {} }
 
+const reducer = (state, { type, payload }) => {
+    switch (type) {
+        case "SET_LOGIN": return { isAuth: true, user: payload.user }
+        case "SET_PROFILE": return { ...state, user: payload.user }
+        case "SET_LOGOUT": return initialState
+        default: return state
+    }
+}
+
+const AuthContext = ({ children }) => {
+
+    const [state, dispatch] = useReducer(reducer, initialState)
     const [isAppLoading, setIsAppLoading] = useState(true)
-    const [user, setUser] = useState(null);
 
-    const router = useRouter();
+    const readProfile = () => {
+        setTimeout(() => { setIsAppLoading(false) }, 1000);
+    }
+    useEffect(() => { readProfile() }, [])
 
-    useEffect(() => {
-
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) setUser(JSON.parse(storedUser));
-
-        setTimeout(() => { setIsAppLoading(false) }, 1500);
-    }, []);
-
-    const login = (userData) => {
-        setUser(userData);
-        localStorage.setItem("user", JSON.stringify(userData));
-        router.push("/dashboard");
-    };
-
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem("user");
-        router.push("/auth/login");
-    };
+    const handleLogout = () => {
+        dispatch({ type: "SET_LOGOUT" })
+    }
 
     return (
-        <Auth.Provider value={{ isAppLoading, user, login, logout }}>
+        <Auth.Provider value={{ isAppLoading, ...state, dispatch, handleLogout }}>
             {children}
         </Auth.Provider>
-    );
+    )
 }
+
+export default AuthContext
 
 export const useAuthContext = () => useContext(Auth)

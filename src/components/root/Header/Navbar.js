@@ -4,8 +4,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import { useAuthContext } from "@/context/Auth";
 
 const Header = () => {
+
+    const { isAuth, handleLogout } = useAuthContext()
+
     const [isOpen, setIsOpen] = useState(false);
 
     const navItems = [
@@ -27,8 +31,17 @@ const Header = () => {
                 </nav>
 
                 <div className="flex items-center gap-3">
-                    <Link href="/auth/login" className="hidden md:inline-block px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 dark:bg-white dark:border-gray-700 dark:hover:bg-gray-200 dark:text-black rounded-lg transition">Login</Link>
-                    <Link href="/auth/register" className="hidden md:inline-block px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 dark:bg-white dark:border-gray-700 dark:hover:bg-gray-200 dark:text-black rounded-lg transition">Register</Link>
+                    {!isAuth
+                        ? <>
+                            <Link href="/auth/login" className="hidden md:inline-block px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 dark:bg-white dark:border-gray-700 dark:hover:bg-gray-200 dark:text-black rounded-lg transition">Login</Link>
+                            <Link href="/auth/register" className="hidden md:inline-block px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 dark:bg-white dark:border-gray-700 dark:hover:bg-gray-200 dark:text-black rounded-lg transition">Register</Link>
+                        </>
+                        : <>
+                            <Link href="/dashboard" className="hidden md:inline-block px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 dark:bg-white dark:border-gray-700 dark:hover:bg-gray-200 dark:text-black rounded-lg transition">Dashboard</Link>
+                            <button className="hidden md:inline-block px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 dark:bg-white dark:border-gray-700 dark:hover:bg-gray-200 dark:text-black rounded-lg transition" onClick={handleLogout}>Logout</button>
+                        </>
+                    }
+
                     <ThemeToggle />
 
                     <button onClick={toggleMenu} className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
