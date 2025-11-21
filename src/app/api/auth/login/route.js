@@ -19,7 +19,7 @@ export async function POST(req) {
         if (!isMatch) { return new Response(JSON.stringify({ error: "Invalid credentials" }), { status: 401 }) }
 
         // Generate JWT token
-        const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "1d" })
+        const token = jwt.sign({ uid: user.uid }, JWT_SECRET, { expiresIn: "1d" })
 
         return new Response(JSON.stringify({ message: "Login successful", token }), { status: 200 })
     } catch (err) {
