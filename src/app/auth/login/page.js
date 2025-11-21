@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link"
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -9,15 +10,20 @@ import { Label } from "@/components/ui/label"
 import { Eye, EyeOff } from "lucide-react"
 import { Spinner } from "@/components/ui/spinner";
 import { isValidEmail, showToast } from "@/lib/global";
+import { useAuthContext } from "@/context/Auth";
 import axios from "axios";
 
 const initialState = { email: "", password: "" }
 
 const Login = () => {
 
+    const { dispatch } = useAuthContext()
+
     const [state, setState] = useState(initialState)
     const [showPassword, setShowPassword] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false)
+
+    const router = useRouter()
 
     const handleChange = e => setState(s => ({ ...s, [e.target.name]: e.target.value }))
 
@@ -34,10 +40,13 @@ const Login = () => {
 
         axios.post("/api/auth/login", formData)
             .then(({ data, status }) => {
-                if (status === 201) {
+                if (status === 200) {
                     const message = data.message || "Login successful";
                     showToast(message, "error")
-                    setState(initialState)
+
+                    localStorage.setItem("token", data.token)
+                    dispatch({ type: "SET_LOGIN", payload: { user: { email } } })
+                    router.push("/")
                 }
             })
             .catch((error) => {
