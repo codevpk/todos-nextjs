@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff } from "lucide-react"
 import { Spinner } from "@/components/ui/spinner";
-import { isValidEmail, randomId, showToast } from "@/lib/global";
+import { isValidEmail, showToast } from "@/lib/global";
 import axios from "axios";
 
 const initialState = { fullName: "", email: "", password: "", confirmPassword: "" }
@@ -24,6 +24,7 @@ const Register = () => {
 
     const handleRegister = (e) => {
         e.preventDefault()
+
         let { fullName, email, password, confirmPassword } = state
 
         fullName = fullName.trim()
@@ -34,11 +35,11 @@ const Register = () => {
         if (password.length < 6) { return showToast("Password must be at least 6 characters", "error") }
         if (confirmPassword !== password) { return showToast("Passwords do not match", "error") }
 
-        const user = { id: randomId(), fullName, email, password, status: "active" }
+        const formData = { fullName, email, password }
 
         setIsProcessing(true)
 
-        axios.post("/api/auth/register", user)
+        axios.post("/api/auth/register", formData)
             .then(({ data, status }) => {
                 if (status === 201) {
                     const message = data.message || "Your account has been successfully registered.";
@@ -80,10 +81,6 @@ const Register = () => {
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="password">Password</Label>
-                                    {/* <div className="flex items-center">
-                                        <Label htmlFor="password">Password</Label>
-                                        <Link href="/auth/forgot-password" className="ml-auto inline-block text-sm font-semibold underline-offset-4 hover:underline">Forgot your password?</Link>
-                                    </div> */}
                                     <div className="relative w-full">
                                         <Input type={showPassword ? "text" : "password"} placeholder="Enter your password" id="password" className="pr-10" name="password" value={state.password} onChange={handleChange} />
                                         <Button type="button" variant="ghost" className="transparent absolute right-0 rounded-tl-[0] rounded-bl-[0] top-1/2 -translate-y-1/2" onClick={() => setShowPassword(!showPassword)}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</Button>
@@ -100,7 +97,6 @@ const Register = () => {
                         </CardContent>
                         <CardFooter className="flex-col gap-2">
                             <Button type="submit" className="w-full" disabled={isProcessing}>{isProcessing && <Spinner />}Register</Button>
-                            {/* <Button variant="outline" className="w-full">Login with Google</Button> */}
                         </CardFooter>
                     </Card>
                 </form>
