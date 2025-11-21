@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Eye, EyeOff } from "lucide-react"
 import { Spinner } from "@/components/ui/spinner";
 import { isValidEmail, randomId, showToast } from "@/lib/global";
+import axios from "axios";
 
 const initialState = { fullName: "", email: "", password: "", confirmPassword: "" }
 
@@ -21,8 +22,8 @@ const Register = () => {
 
     const handleChange = e => setState(s => ({ ...s, [e.target.name]: e.target.value }))
 
-    const handleRegister = () => {
-
+    const handleRegister = (e) => {
+        e.preventDefault()
         let { fullName, email, password, confirmPassword } = state
 
         fullName = fullName.trim()
@@ -35,33 +36,47 @@ const Register = () => {
 
         const user = { id: randomId(), fullName, email, password, status: "active" }
 
-        console.log('user', user)
         setIsProcessing(true)
-        setTimeout(() => { setIsProcessing(false) }, 500)
+
+        axios.post("/api/auth/register", user)
+            .then(({ data, status }) => {
+                if (status === 201) {
+                    const message = data.message || "Your account has been successfully registered.";
+                    showToast(message, "error")
+                    setState(initialState)
+                }
+            })
+            .catch((error) => {
+                const message = error.response?.data?.error || "Something went wrong. Please try again.";
+                showToast(message, "error");
+            })
+            .finally(() => {
+                setIsProcessing(false)
+            })
 
     }
 
     return (
         <main className='flex-grow flex items-center'>
             <div className="container mx-auto px-4 py-15">
-                <Card className="w-[500px] mx-auto">
-                    <CardHeader>
-                        <CardTitle>Register a new account</CardTitle>
-                        <CardDescription>Enter your details below to register your account</CardDescription>
-                        <CardAction>
-                            <Link href="/auth/login" className="ml-auto inline-block text-sm font-semibold underline-offset-4 hover:underline">Login</Link>
-                        </CardAction>
-                    </CardHeader>
-                    <CardContent>
-                        <form>
+                <form onSubmit={handleRegister}>
+                    <Card className="w-[500px] mx-auto">
+                        <CardHeader>
+                            <CardTitle>Register a new account</CardTitle>
+                            <CardDescription>Enter your details below to register your account</CardDescription>
+                            <CardAction>
+                                <Link href="/auth/login" className="ml-auto inline-block text-sm font-semibold underline-offset-4 hover:underline">Login</Link>
+                            </CardAction>
+                        </CardHeader>
+                        <CardContent>
                             <div className="flex flex-col gap-6">
                                 <div className="grid gap-2">
                                     <Label htmlFor="fullName">Full Name</Label>
-                                    <Input type="text" id="fullName" placeholder="John Doe" name="fullName" onChange={handleChange} />
+                                    <Input type="text" id="fullName" placeholder="John Doe" name="fullName" value={state.fullName} onChange={handleChange} />
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="email">Email</Label>
-                                    <Input type="email" id="email" placeholder="user@example.com" name="email" onChange={handleChange} />
+                                    <Input type="email" id="email" placeholder="user@example.com" name="email" value={state.email} onChange={handleChange} />
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="password">Password</Label>
@@ -70,25 +85,25 @@ const Register = () => {
                                         <Link href="/auth/forgot-password" className="ml-auto inline-block text-sm font-semibold underline-offset-4 hover:underline">Forgot your password?</Link>
                                     </div> */}
                                     <div className="relative w-full">
-                                        <Input type={showPassword ? "text" : "password"} placeholder="Enter your password" id="password" className="pr-10" name="password" onChange={handleChange} />
+                                        <Input type={showPassword ? "text" : "password"} placeholder="Enter your password" id="password" className="pr-10" name="password" value={state.password} onChange={handleChange} />
                                         <Button type="button" variant="ghost" className="transparent absolute right-0 rounded-tl-[0] rounded-bl-[0] top-1/2 -translate-y-1/2" onClick={() => setShowPassword(!showPassword)}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</Button>
                                     </div>
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="confirmPassword">Confirm Password</Label>
                                     <div className="relative w-full">
-                                        <Input type={showConfirmPassword ? "text" : "password"} placeholder="Enter your password again" id="confirmPassword" className="pr-10" name="confirmPassword" onChange={handleChange} />
+                                        <Input type={showConfirmPassword ? "text" : "password"} placeholder="Enter your password again" id="confirmPassword" className="pr-10" name="confirmPassword" value={state.confirmPassword} onChange={handleChange} />
                                         <Button type="button" variant="ghost" className="transparent absolute right-0 rounded-tl-[0] rounded-bl-[0] top-1/2 -translate-y-1/2" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>{showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}</Button>
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </CardContent>
-                    <CardFooter className="flex-col gap-2">
-                        <Button type="submit" className="w-full" onClick={handleRegister} disabled={isProcessing}>{isProcessing && <Spinner />}Register</Button>
-                        {/* <Button variant="outline" className="w-full">Login with Google</Button> */}
-                    </CardFooter>
-                </Card>
+                        </CardContent>
+                        <CardFooter className="flex-col gap-2">
+                            <Button type="submit" className="w-full" disabled={isProcessing}>{isProcessing && <Spinner />}Register</Button>
+                            {/* <Button variant="outline" className="w-full">Login with Google</Button> */}
+                        </CardFooter>
+                    </Card>
+                </form>
             </div>
         </main>
     )
