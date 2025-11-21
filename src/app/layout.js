@@ -1,8 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
-import Header from "@/components/root/Header";
-import Footer from "@/components/root/Footer";
 import AppProvider from "@/context/AppProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] })
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] })
@@ -46,6 +45,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}>
         <AppProvider>
           {children}
+          <Toaster position="top-center" />
         </AppProvider>
       </body>
     </html>
