@@ -43,7 +43,7 @@ const Register = () => {
             .then(({ data, status }) => {
                 if (status === 201) {
                     const message = data.message || "Your account has been successfully registered.";
-                    showToast(message, "error")
+                    showToast(message, "success")
                     setState(initialState)
                 }
             })
@@ -61,7 +61,7 @@ const Register = () => {
         <main className='flex-grow flex items-center'>
             <div className="container mx-auto px-4 py-15">
                 <form onSubmit={handleRegister}>
-                    <Card className="w-[500px] mx-auto">
+                    <Card className="w-full max-w-[500px] mx-auto">
                         <CardHeader>
                             <CardTitle>Register a new account</CardTitle>
                             <CardDescription>Enter your details below to register your account</CardDescription>

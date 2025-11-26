@@ -42,7 +42,7 @@ const Login = () => {
             .then(({ data, status }) => {
                 if (status === 200) {
                     const message = data.message || "Login successful";
-                    showToast(message, "error")
+                    showToast(message, "success")
 
                     localStorage.setItem("token", data.token)
                     dispatch({ type: "SET_LOGIN", payload: { user: { email } } })
@@ -63,7 +63,7 @@ const Login = () => {
         <main className='flex-grow flex items-center'>
             <div className="container mx-auto px-4 py-15">
                 <form onSubmit={handleLogin}>
-                    <Card className="w-[500px] mx-auto">
+                    <Card className="w-full max-w-[500px] mx-auto">
                         <CardHeader>
                             <CardTitle>Login to your account</CardTitle>
                             <CardDescription>Enter your credentials to login to your account</CardDescription>
