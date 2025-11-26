@@ -17,7 +17,7 @@ const initialState = { email: "", password: "" }
 
 const Login = () => {
 
-    const { dispatch } = useAuthContext()
+    const { readProfile } = useAuthContext()
 
     const [state, setState] = useState(initialState)
     const [showPassword, setShowPassword] = useState(false)
@@ -45,7 +45,7 @@ const Login = () => {
                     showToast(message, "success")
 
                     localStorage.setItem("token", data.token)
-                    dispatch({ type: "SET_LOGIN", payload: { user: { email } } })
+                    readProfile()
                     router.push("/")
                 }
             })

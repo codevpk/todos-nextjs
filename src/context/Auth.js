@@ -43,7 +43,7 @@ const AuthContext = ({ children }) => {
     const handleLogout = () => dispatch({ type: "SET_LOGOUT" })
 
     return (
-        <Auth.Provider value={{ isAppLoading, ...state, dispatch, handleLogout }}>
+        <Auth.Provider value={{ isAppLoading, ...state, dispatch, handleLogout, readProfile }}>
             {children}
         </Auth.Provider>
     )
