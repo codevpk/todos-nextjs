@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useReducer, useState } from "react";
 import axios from "axios";
+import { showToast } from "@/lib/global"
 
 const Auth = createContext()
 
@@ -40,7 +41,10 @@ const AuthContext = ({ children }) => {
     }
     useEffect(() => { readProfile() }, [])
 
-    const handleLogout = () => dispatch({ type: "SET_LOGOUT" })
+    const handleLogout = () => {
+        dispatch({ type: "SET_LOGOUT" })
+        showToast("Logout successful", "success")
+    }
 
     return (
         <Auth.Provider value={{ isAppLoading, ...state, dispatch, handleLogout, readProfile }}>

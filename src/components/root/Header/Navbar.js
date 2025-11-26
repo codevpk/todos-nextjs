@@ -5,16 +5,12 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { useAuthContext } from "@/context/Auth";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 
 const Header = () => {
 
     const { isAuth, handleLogout } = useAuthContext()
 
     const [isOpen, setIsOpen] = useState(false)
-
-    const router = useRouter()
 
     const navItems = [
         { label: "Home", href: "/" },
@@ -37,7 +33,6 @@ const Header = () => {
                 <div className="flex items-center gap-3">
                     {!isAuth
                         ? <>
-                            <Button className="cursor-pointer" onClick={() => router.push("/dashboard")}>Dashboard</Button>
                             <Link href="/auth/login" className="hidden md:inline-block px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 dark:bg-white dark:border-gray-700 dark:hover:bg-gray-200 dark:text-black rounded-lg transition">Login</Link>
                             <Link href="/auth/register" className="hidden md:inline-block px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 dark:bg-white dark:border-gray-700 dark:hover:bg-gray-200 dark:text-black rounded-lg transition">Register</Link>
                         </>
