@@ -60,7 +60,7 @@ const Login = () => {
     }
 
     return (
-        <main className='flex-grow flex items-center'>
+        <main className='flex grow items-center'>
             <div className="container mx-auto px-4 py-15">
                 <form onSubmit={handleLogin}>
                     <Card className="w-full max-w-[500px] mx-auto">
@@ -84,7 +84,7 @@ const Login = () => {
                                     </div>
                                     <div className="relative w-full">
                                         <Input type={showPassword ? "text" : "password"} placeholder="Enter your password" id="password" className="pr-10" name="password" value={state.password} onChange={handleChange} />
-                                        <Button type="button" variant="ghost" className="transparent absolute right-0 rounded-tl-[0] rounded-bl-[0] top-1/2 -translate-y-1/2" onClick={() => setShowPassword(!showPassword)}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</Button>
+                                        <Button type="button" variant="ghost" className="transparent absolute right-0 rounded-tl-none rounded-bl-none top-1/2 -translate-y-1/2" onClick={() => setShowPassword(!showPassword)}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</Button>
                                     </div>
                                 </div>
                             </div>
