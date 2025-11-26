@@ -1,8 +1,7 @@
 import ProtectedRoute from "@/components/ProtectedRoute";
-import Footer from "@/components/root/Footer";
 
 export const metadata = {
-  title: "Dashboard - Todos App by CoDev Technologies",
+  title: "Auth - Todos App by CoDev Technologies",
   description:
     "Manage your daily tasks effortlessly with the Todos App by CoDev Technologies. A simple, fast, and responsive task management tool built using Next.js, designed to help you stay productive and organized anytime, anywhere.",
   keywords: ["todos app", "task manager", "productivity app", "CoDev Technologies", "nextjs app", "todo list", "task tracker", "daily planner", "web app", "codev todos"],
@@ -34,11 +33,10 @@ export const metadata = {
   },
 };
 
-export default function DashboardLayout({ children }) {
+export default function AuthLayout({ children }) {
   return (
     <ProtectedRoute>
       {children}
-      <Footer />
     </ProtectedRoute>
   );
 }
