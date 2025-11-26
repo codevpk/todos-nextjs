@@ -1,7 +1,8 @@
 "use client"
+
+import { useEffect } from "react"
 import { useAuthContext } from "@/context/Auth"
 import { useRouter, usePathname } from "next/navigation"
-import { useEffect } from "react"
 
 export default function ProtectedRoute({ children }) {
 
