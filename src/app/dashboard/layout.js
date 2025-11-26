@@ -1,4 +1,3 @@
-import Header from "@/components/root/Header";
 import Footer from "@/components/root/Footer";
 
 export const metadata = {
@@ -34,10 +33,9 @@ export const metadata = {
   },
 };
 
-export default function FrontendLayout({ children }) {
+export default function DashboardLayout({ children }) {
   return (
     <>
-      <Header />
       {children}
       <Footer />
     </>
