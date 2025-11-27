@@ -28,7 +28,7 @@ export async function PATCH(req, { params }) {
     if (!uid) { return NextResponse.json({ error: "Unauthorized" }, { status: 401 }) }
 
     const { id } = await params;
-    const { title, description, dueDate, priority, completed } = await req.json();
+    const { title, description, dueDate, priority, isCompleted } = await req.json();
 
     const updatedTodo = await Todo.findOneAndUpdate(
         { id },
@@ -37,7 +37,7 @@ export async function PATCH(req, { params }) {
             ...(description !== undefined && { description }),
             ...(dueDate && { dueDate }),
             ...(priority && { priority }),
-            ...(completed !== undefined && { completed }),
+            ...(isCompleted !== undefined && { isCompleted }),
         },
         { new: true }
     );

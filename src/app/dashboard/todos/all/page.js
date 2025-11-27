@@ -10,12 +10,15 @@ import dayjs from "dayjs";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, Edit, Trash } from "lucide-react"; // icon for the trigger
+import { useRouter } from "next/navigation";
 
 
 const All = () => {
     const [todos, setTodos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [deletingId, setDeletingId] = useState(null);
+
+    const router = useRouter()
 
     // Fetch all todos
     const fetchTodos = () => {
@@ -77,7 +80,7 @@ const All = () => {
                             <TableCell>{todo.description}</TableCell>
                             <TableCell>{todo.dueDate ? dayjs(todo.dueDate).format("ddd, DD MMM YYYY") : "-"}</TableCell>
                             <TableCell className="capitalize">{todo.priority}</TableCell>
-                            <TableCell>{todo.completed ? <Badge variant="success">Completed</Badge> : <Badge variant="destructive">Pending</Badge>}</TableCell>
+                            <TableCell>{todo.isCompleted ? <Badge variant="success">Completed</Badge> : <Badge variant="destructive">Pending</Badge>}</TableCell>
                             <TableCell>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -86,7 +89,7 @@ const All = () => {
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
-                                        <DropdownMenuItem onClick={() => alert(`Edit Todo: ${todo.title}`)}><Edit className="mr-2 h-4 w-4" />Edit</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => router.push(`/dashboard/todos/${todo.id}`)}><Edit className="mr-2 h-4 w-4" />Edit</DropdownMenuItem>
                                         <DropdownMenuItem onClick={() => handleDelete(todo.id)} disabled={deletingId === todo.id}>
                                             <Trash className="mr-2 h-4 w-4" />{deletingId === todo.id ? <Spinner size="sm" /> : "Delete"}
                                         </DropdownMenuItem>
