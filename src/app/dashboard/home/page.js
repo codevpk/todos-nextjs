@@ -11,15 +11,22 @@ const Home = () => {
     const router = useRouter()
 
     return (
-        <main className="grow">
-            <div className="container mx-auto px-4 py-15 text-center">
-                <h1 className="text-5xl">Home page</h1>
-                <h1 className="text-5xl">UID: {user.uid}</h1>
-                <h1 className="text-5xl">Full Name: {user.fullName}</h1>
-                <h1 className="text-5xl">Email: {user.email}</h1>
+        <>
+            <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+                <div className="bg-muted/50 aspect-video rounded-xl flex justify-center items-center text-center">
+                    <h1 className="text-4xl">UID<br />{user.uid}</h1>
+                </div>
+                <div className="bg-muted/50 aspect-video rounded-xl flex justify-center items-center text-center">
+                    <h1 className="text-4xl">Full Name<br />{user.fullName}</h1>
+                </div>
+                <div className="bg-muted/50 aspect-video rounded-xl flex justify-center items-center text-center">
+                    <h1 className="text-4xl">Email<br />{user.email}</h1>
+                </div>
+            </div>
+            <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min flex justify-center items-center">
                 <Button className="mt-5 cursor-pointer" onClick={() => router.push("/")}>Home</Button>
             </div>
-        </main>
+        </>
     )
 }
 
