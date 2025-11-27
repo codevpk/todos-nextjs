@@ -11,12 +11,16 @@ import { Spinner } from "@/components/ui/spinner";
 import { showToast } from "@/lib/global";
 import axios from "axios";
 import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 
 const initialState = { title: "", description: "", dueDate: "", priority: "medium" };
 
 const Add = () => {
-  const [state, setState] = useState(initialState);
-  const [isProcessing, setIsProcessing] = useState(false);
+
+  const [state, setState] = useState(initialState)
+  const [isProcessing, setIsProcessing] = useState(false)
+
+  const router = useRouter()
 
   const handleChange = e => setState(s => ({ ...s, [e.target.name]: e.target.value }));
 
@@ -52,9 +56,12 @@ const Add = () => {
       <div className="container mx-auto px-4 py-15">
         <form onSubmit={handleCreateTodo}>
           <Card className="w-full max-w-[500px] mx-auto">
-            <CardHeader>
-              <CardTitle>Create a New Todo</CardTitle>
-              <CardDescription>Fill in the details below to create a new todo</CardDescription>
+            <CardHeader className="flex items-start justify-between">
+              <div>
+                <CardTitle>Create a New Todo</CardTitle>
+                <CardDescription>Fill in the details below to create a new todo</CardDescription>
+              </div>
+              <Button variant="ghost" size="sm" type="button" onClick={() => router.push("/dashboard/todos")}>Cancel</Button>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col gap-6">

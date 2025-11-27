@@ -9,7 +9,7 @@ import { showToast } from "@/lib/global";
 import dayjs from "dayjs";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Edit, Trash } from "lucide-react"; // icon for the trigger
+import { MoreHorizontal, Edit, Trash, CheckCircle2 } from "lucide-react"; // icon for the trigger
 import { useRouter } from "next/navigation";
 
 
@@ -20,9 +20,9 @@ const All = () => {
 
     const router = useRouter()
 
-    // Fetch all todos
+    const token = localStorage.getItem("token")
+
     const fetchTodos = () => {
-        const token = localStorage.getItem("token")
         setLoading(true);
         axios.get("/api/todos", { headers: { Authorization: `Bearer ${token}` } })
             .then(({ data }) => setTodos(data))
@@ -33,13 +33,23 @@ const All = () => {
 
     useEffect(() => { fetchTodos() }, []);
 
-    // Delete a todo
+    const handleMarkCompleted = async (id) => {
+        try {
+
+            const { data } = await axios.patch(`/api/todos/${id}`, { isCompleted: true }, { headers: { Authorization: `Bearer ${token}` } });
+            showToast(data.message || "Todo marked as completed!", "success");
+
+            setTodos(prev => prev.map(t => t.id === id ? { ...t, isCompleted: true } : t));
+        } catch (err) {
+            showToast(err.response?.data?.error || "Failed to mark as completed", "error");
+        }
+    }
+
     const handleDelete = (id) => {
 
         if (!confirm("Are you sure you want to delete this todo?")) return;
 
-        setDeletingId(id);
-        const token = localStorage.getItem("token")
+        setDeletingId(id)
         axios
             .delete(`/api/todos/${id}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(({ data }) => {
@@ -55,7 +65,10 @@ const All = () => {
 
     return (
         <div className="container mx-auto px-4 py-10">
-            <h1 className="text-2xl font-bold mb-6">All Todos</h1>
+            <div className="flex items-center justify-between mb-6">
+                <h1 className="text-2xl font-bold">All Todos</h1>
+                <Button onClick={() => router.push("/dashboard/todos/add")}>Add Todo</Button>
+            </div>
 
             <Table>
                 <TableHeader>
@@ -89,6 +102,7 @@ const All = () => {
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
+                                        <DropdownMenuItem onClick={() => handleMarkCompleted(todo.id)} disabled={todo.isCompleted}><CheckCircle2 className={`mr-2 h-4 w-4 ${todo.isCompleted ? "text-green-500" : ""}`} />Mark as Completed</DropdownMenuItem>
                                         <DropdownMenuItem onClick={() => router.push(`/dashboard/todos/${todo.id}`)}><Edit className="mr-2 h-4 w-4" />Edit</DropdownMenuItem>
                                         <DropdownMenuItem onClick={() => handleDelete(todo.id)} disabled={deletingId === todo.id}>
                                             <Trash className="mr-2 h-4 w-4" />{deletingId === todo.id ? <Spinner size="sm" /> : "Delete"}

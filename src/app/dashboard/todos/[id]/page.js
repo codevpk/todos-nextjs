@@ -32,7 +32,6 @@ const Edit = () => {
     useEffect(() => {
         axios.get(`/api/todos/${id}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(({ data }) => {
-                console.log('data', data)
                 setState({
                     title: data.title || "",
                     description: data.description || "",
@@ -50,8 +49,6 @@ const Edit = () => {
         e.preventDefault();
 
         if (!state.title.trim()) return showToast("Please enter a title for your todo", "error");
-
-        console.log('state', state)
 
         setIsProcessing(true);
         try {
