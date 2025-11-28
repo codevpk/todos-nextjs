@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, Edit, Trash, CheckCircle2 } from "lucide-react"; // icon for the trigger
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
 
 const All = () => {
     const [todos, setTodos] = useState([]);
@@ -73,6 +73,7 @@ const All = () => {
             <Table>
                 <TableHeader>
                     <TableRow>
+                        <TableHead>Image</TableHead>
                         <TableHead>Title</TableHead>
                         <TableHead>Description</TableHead>
                         <TableHead>Due Date</TableHead>
@@ -89,6 +90,9 @@ const All = () => {
                     )}
                     {todos.map((todo) => (
                         <TableRow key={todo.id}>
+                            <TableCell>
+                                {todo.image && <Image src={todo.image} alt={todo.title} width={64} height={64} className="rounded object-cover" />}
+                            </TableCell>
                             <TableCell>{todo.title}</TableCell>
                             <TableCell>{todo.description}</TableCell>
                             <TableCell>{todo.dueDate ? dayjs(todo.dueDate).format("ddd, DD MMM YYYY") : "-"}</TableCell>

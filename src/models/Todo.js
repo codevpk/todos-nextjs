@@ -9,8 +9,7 @@ const schema = new Schema({
     dueDate: { type: Date, default: () => Date.now() + 7 * 24 * 60 * 60 * 1000 }, // Default to one week from now
     priority: { type: String, enum: ["low", "medium", "high"], default: "medium" },
     isCompleted: { type: Boolean, default: false },
-    createdAt: { type: Date, default: Date.now },
+    image: { type: String, default: null }
 }, { timestamps: true })
 
-const Todo = models.Todo || model("Todo", schema)
-export default Todo
+export default models.Todo || model("Todo", schema)

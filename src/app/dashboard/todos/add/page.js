@@ -13,7 +13,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 
-const initialState = { title: "", description: "", dueDate: "", priority: "medium" };
+const initialState = { title: "", description: "", dueDate: "", priority: "medium", image: null };
 
 const Add = () => {
 
@@ -27,14 +27,21 @@ const Add = () => {
   const handleCreateTodo = async e => {
     e.preventDefault();
 
-    const { title, description, dueDate, priority } = state;
+    const { title, description, dueDate, priority, image } = state;
 
     if (!title.trim()) return showToast("Please enter a title for your todo", "error");
 
     setIsProcessing(true);
 
     const token = localStorage.getItem("token");
-    axios.post("/api/todos", { title, description, dueDate, priority }, { headers: { Authorization: `Bearer ${token}` } })
+    const formData = new FormData();
+    const data = { title, description, dueDate, priority, image };
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value) formData.append(key, value)
+    })
+
+    axios.post("/api/todos", formData, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } })
       .then(({ data, status }) => {
         if (status === 201) {
           showToast("Todo created successfully!", "success");
@@ -92,6 +99,17 @@ const Add = () => {
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="image">Attach Image</Label>
+                  <Input type="file" id="image" accept="image/*" onChange={e => setState(s => ({ ...s, image: e.target.files[0] }))} />
+                  {state.image && (
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500 mb-1">Preview:</p>
+                      <img src={URL.createObjectURL(state.image)} alt="Preview" className="max-h-40 w-auto rounded border" />
+                    </div>
+                  )}
+                </div>
+
               </div>
             </CardContent>
             <CardFooter className="flex-col gap-2">

@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
   reactCompiler: true,
+  images: {
+    domains: ['res.cloudinary.com'], // replace with your Cloudinary cloud name if different
+  },
 };
 
 export default nextConfig;
