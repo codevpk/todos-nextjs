@@ -3,13 +3,16 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, } from "@/components/ui/dropdown-menu"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar, } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage, } from "@/components/ui/avatar"
-import { BadgeCheck, ChevronsUpDown, LogOut, Shield } from "lucide-react"
+import { BadgeCheck, ChevronsUpDown, LogOut, Shield, Sun, Moon } from "lucide-react"
 import { useAuthContext } from "@/context/Auth"
+import { useTheme } from "next-themes";
+import { Switch } from "@/components/ui/switch"; // shadcn switch
 
 export function NavUser() {
 
     const { isMobile } = useSidebar()
     const { user, handleLogout } = useAuthContext()
+    const { theme, setTheme } = useTheme()
 
     user.avatar = "https://umairahmad.net/img/testimonial-1.jpg"
 
@@ -55,6 +58,10 @@ export function NavUser() {
                         <DropdownMenuGroup>
                             <DropdownMenuItem><BadgeCheck />Account</DropdownMenuItem>
                             <DropdownMenuItem><Shield />Profile</DropdownMenuItem>
+                            <DropdownMenuItem className="flex items-center justify-between cursor-pointer" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                                <div className="flex items-center gap-2">{theme === "dark" ? <Sun /> : <Moon />}<span>Theme</span></div>
+                                <Switch checked={theme === "dark"} onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")} />
+                            </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}><LogOut />Log out</DropdownMenuItem>
