@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, GalleryVerticalEnd } from "lucide-react"
 import { Spinner } from "@/components/ui/spinner";
 import { isValidEmail, showToast } from "@/lib/global";
 import axios from "axios";
@@ -58,48 +58,53 @@ const Register = () => {
     }
 
     return (
-        <main className='flex grow items-center'>
-            <div className="container mx-auto px-4 py-15">
-                <form onSubmit={handleRegister}>
-                    <Card className="w-full max-w-[500px] mx-auto">
-                        <CardHeader>
-                            <CardTitle>Register a new account</CardTitle>
+        <main className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+            <div className="flex w-full max-w-sm flex-col gap-6">
+                <Link href="/" className="flex items-center gap-2 self-center font-medium">
+                    <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md"><GalleryVerticalEnd className="size-4" /></div>
+                    Todos App
+                </Link>
+                <div className="flex flex-col gap-6">
+                    <Card>
+                        <CardHeader className="text-center">
+                            <CardTitle className="text-xl">Create your account</CardTitle>
                             <CardDescription>Enter your details below to register your account</CardDescription>
-                            <CardAction>
-                                <Link href="/auth/login" className="ml-auto inline-block text-sm font-semibold underline-offset-4 hover:underline">Login</Link>
-                            </CardAction>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex flex-col gap-6">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="fullName">Full Name</Label>
-                                    <Input type="text" id="fullName" placeholder="John Doe" name="fullName" value={state.fullName} onChange={handleChange} />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="email">Email</Label>
-                                    <Input type="email" id="email" placeholder="user@example.com" name="email" value={state.email} onChange={handleChange} />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="password">Password</Label>
-                                    <div className="relative w-full">
-                                        <Input type={showPassword ? "text" : "password"} placeholder="Enter your password" id="password" className="pr-10" name="password" value={state.password} onChange={handleChange} />
-                                        <Button type="button" variant="ghost" className="transparent absolute right-0 rounded-tl-none rounded-bl-none top-1/2 -translate-y-1/2" onClick={() => setShowPassword(!showPassword)}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</Button>
-                                    </div>
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="confirmPassword">Confirm Password</Label>
-                                    <div className="relative w-full">
-                                        <Input type={showConfirmPassword ? "text" : "password"} placeholder="Enter your password again" id="confirmPassword" className="pr-10" name="confirmPassword" value={state.confirmPassword} onChange={handleChange} />
-                                        <Button type="button" variant="ghost" className="transparent absolute right-0 rounded-tl-none rounded-bl-none top-1/2 -translate-y-1/2" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>{showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}</Button>
-                                    </div>
-                                </div>
-                            </div>
+                            <form onSubmit={handleRegister}>
+                                <FieldGroup>
+                                    <Field>
+                                        <FieldLabel htmlFor="fullName">Full Name</FieldLabel>
+                                        <Input type="text" id="fullName" placeholder="Enter your full name" name="fullName" value={state.fullName} onChange={handleChange} />
+                                    </Field>
+                                    <Field>
+                                        <FieldLabel htmlFor="email">Email</FieldLabel>
+                                        <Input type="email" id="email" placeholder="Enter your email" name="email" value={state.email} onChange={handleChange} />
+                                    </Field>
+                                    <Field>
+                                        <FieldLabel htmlFor="password">Password</FieldLabel>
+                                        <div className="relative w-full">
+                                            <Input type={showPassword ? "text" : "password"} placeholder="Enter your password" id="password" className="pr-10" name="password" value={state.password} onChange={handleChange} />
+                                            <Button type="button" variant="ghost" className="transparent absolute right-0 rounded-tl-none rounded-bl-none top-1/2 -translate-y-1/2" onClick={() => setShowPassword(!showPassword)}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</Button>
+                                        </div>
+                                    </Field>
+                                    <Field>
+                                        <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
+                                        <div className="relative w-full">
+                                            <Input type={showConfirmPassword ? "text" : "password"} placeholder="Enter your password again" id="confirmPassword" className="pr-10" name="confirmPassword" value={state.confirmPassword} onChange={handleChange} />
+                                            <Button type="button" variant="ghost" className="transparent absolute right-0 rounded-tl-none rounded-bl-none top-1/2 -translate-y-1/2" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>{showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}</Button>
+                                        </div>
+                                    </Field>
+                                    <Field>
+                                        <Button type="submit" disabled={isProcessing}>{isProcessing && <Spinner />}Register</Button>
+                                        <FieldDescription className="text-center">Already have an account? <Link href="/auth/login">Login</Link></FieldDescription>
+                                    </Field>
+                                </FieldGroup>
+                            </form>
                         </CardContent>
-                        <CardFooter className="flex-col gap-2">
-                            <Button type="submit" className="w-full" disabled={isProcessing}>{isProcessing && <Spinner />}Register</Button>
-                        </CardFooter>
                     </Card>
-                </form>
+                    <FieldDescription className="px-6 text-center">By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</FieldDescription>
+                </div>
             </div>
         </main>
     )

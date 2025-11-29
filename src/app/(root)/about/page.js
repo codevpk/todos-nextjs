@@ -1,12 +1,11 @@
-const Home = () => {
-
+const About = () => {
     return (
         <main className="grow">
             <div className="container mx-auto px-4 py-15">
-                <h1 className="text-5xl text-center">About page</h1>
+                <h1 className="text-5xl text-center">About</h1>
             </div>
         </main>
     )
 }
 
-export default Home
+export default About
