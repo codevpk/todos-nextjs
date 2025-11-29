@@ -51,18 +51,20 @@ const Edit = () => {
         if (!state.title.trim()) return showToast("Please enter a title for your todo", "error");
 
         setIsProcessing(true);
-        try {
-            const { data, status } = await axios.patch(`/api/todos/${id}`, state, { headers: { Authorization: `Bearer ${token}` } });
-            if (status === 200) {
-                showToast("Todo updated successfully!", "success");
-                router.push("/dashboard/todos/all");
-            }
-        } catch (error) {
-            const message = error.response?.data?.error || "Something went wrong. Please try again.";
-            showToast(message, "error");
-        } finally {
-            setIsProcessing(false);
-        }
+        axios.patch(`/api/todos/${id}`, state, { headers: { Authorization: `Bearer ${token}` } })
+            .then(({ status }) => {
+                if (status === 200) {
+                    showToast("Todo updated successfully!", "success");
+                    router.push("/dashboard/todos/all");
+                }
+            })
+            .catch((error) => {
+                const message = error.response?.data?.error || "Something went wrong. Please try again.";
+                showToast(message, "error");
+            })
+            .finally(() => {
+                setIsProcessing(false);
+            });
     };
 
     if (loading) return <div className="flex justify-center py-10"><Spinner /></div>;

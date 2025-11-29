@@ -28,21 +28,18 @@ const All = () => {
             .then(({ data }) => setTodos(data))
             .catch((error) => showToast(error.response?.data?.error || "Failed to fetch todos", "error"))
             .finally(() => setLoading(false));
-
-    };
-
-    useEffect(() => { fetchTodos() }, []);
+    }
+    useEffect(() => { fetchTodos() }, [])
 
     const handleMarkCompleted = async (id) => {
-        try {
-
-            const { data } = await axios.patch(`/api/todos/${id}`, { isCompleted: true }, { headers: { Authorization: `Bearer ${token}` } });
-            showToast(data.message || "Todo marked as completed!", "success");
-
-            setTodos(prev => prev.map(t => t.id === id ? { ...t, isCompleted: true } : t));
-        } catch (err) {
-            showToast(err.response?.data?.error || "Failed to mark as completed", "error");
-        }
+        axios.patch(`/api/todos/${id}`, { isCompleted: true }, { headers: { Authorization: `Bearer ${token}` } })
+            .then(({ data }) => {
+                showToast(data.message || "Todo marked as completed!", "success")
+                setTodos(todos => todos.map(t => (t.id === id ? { ...t, isCompleted: true } : t)))
+            })
+            .catch((err) => {
+                showToast(err.response?.data?.error || "Failed to mark as completed", "error");
+            })
     }
 
     const handleDelete = (id) => {
@@ -50,8 +47,7 @@ const All = () => {
         if (!confirm("Are you sure you want to delete this todo?")) return;
 
         setDeletingId(id)
-        axios
-            .delete(`/api/todos/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+        axios.delete(`/api/todos/${id}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(({ data }) => {
                 showToast(data.message || "Todo deleted", "success");
                 const filteredTodos = todos.filter((todo) => todo.id !== id);

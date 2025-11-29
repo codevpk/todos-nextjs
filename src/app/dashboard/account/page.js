@@ -30,53 +30,51 @@ const ProfilePage = () => {
 
     const token = localStorage.getItem("token")
 
-    // Fetch profile on mount
-    useEffect(() => {
-        setFullName(user.fullName);
-        setPhotoPreview(user.photoURL || null);
-    }, [user]);
+    useEffect(() => { setFullName(user.fullName); setPhotoPreview(user.photoURL || null); }, [user]);
 
-    // Handle profile update
-    const handleUpdateProfile = async (e) => {
-        e.preventDefault();
-        setIsUpdatingProfile(true);
+    const handleUpdateProfile = e => {
 
-        try {
-            const formData = new FormData();
-            formData.append("fullName", fullName);
-            if (photo) formData.append("photo", photo);
+        e.preventDefault()
 
-            const { data } = await axios.patch("/api/auth/profile", formData, { headers: { Authorization: `Bearer ${token}` } });
-            showToast(data.message || "Profile updated", "success");
-            dispatch({ type: "SET_PROFILE", payload: { user: data.user } });
-        } catch (err) {
-            showToast(err.response?.data?.error || "Failed to update profile", "error");
-        } finally {
-            setIsUpdatingProfile(false);
-        }
+        const formData = new FormData()
+        formData.append("fullName", fullName)
+        if (photo) formData.append("photo", photo)
+
+        setIsUpdatingProfile(true)
+        axios.patch("/api/auth/profile", formData, { headers: { Authorization: `Bearer ${token}` } })
+            .then(({ data }) => {
+                showToast(data.message || "Profile updated", "success");
+                dispatch({ type: "SET_PROFILE", payload: { user: data.user } });
+            })
+            .catch((err) => {
+                showToast(err.response?.data?.error || "Failed to update profile", "error");
+            })
+            .finally(() => {
+                setIsUpdatingProfile(false);
+            });
     };
 
-    // Handle password change
-    const handleChangePassword = async (e) => {
-        e.preventDefault();
-        setIsChangingPassword(true);
-        try {
-            const formData = new FormData();
-            formData.append("currentPassword", currentPassword);
-            formData.append("newPassword", newPassword);
+    const handleChangePassword = e => {
 
-            const { data } = await axios.put("/api/auth/profile", formData, {
-                headers: { Authorization: `Bearer ${token}` },
+        e.preventDefault()
+
+        const formData = new FormData()
+        formData.append("currentPassword", currentPassword)
+        formData.append("newPassword", newPassword)
+
+        setIsChangingPassword(true)
+        axios.put("/api/auth/profile", formData, { headers: { Authorization: `Bearer ${token}` } })
+            .then(({ data }) => {
+                showToast(data.message || "Password changed", "success");
+                setCurrentPassword("");
+                setNewPassword("");
+            })
+            .catch((err) => {
+                showToast(err.response?.data?.error || "Failed to change password", "error");
+            })
+            .finally(() => {
+                setIsChangingPassword(false);
             });
-
-            showToast(data.message || "Password changed", "success");
-            setCurrentPassword("");
-            setNewPassword("");
-        } catch (err) {
-            showToast(err.response?.data?.error || "Failed to change password", "error");
-        } finally {
-            setIsChangingPassword(false);
-        }
     };
 
     return (
