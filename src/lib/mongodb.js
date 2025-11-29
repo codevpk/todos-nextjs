@@ -16,12 +16,7 @@ export async function connectDB() {
     if (cached.conn) return cached.conn;
 
     if (!cached.promise) {
-        cached.promise = mongoose.connect(MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            serverSelectionTimeoutMS: 5000, // try 5s
-            socketTimeoutMS: 45000,
-        }).then((mongoose) => mongoose);
+        cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => mongoose);
     }
 
     try {
